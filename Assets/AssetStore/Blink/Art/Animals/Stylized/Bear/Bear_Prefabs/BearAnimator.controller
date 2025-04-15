@@ -11,6 +11,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Stunned Loop
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Death
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7996021536020428740}
   m_Solo: 0
@@ -123,7 +126,7 @@ AnimatorStateMachine:
     m_Position: {x: 520, y: 810, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5823023316003678689}
-    m_Position: {x: 520, y: 1210, z: 0}
+    m_Position: {x: 1360, y: 860, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7996021536020428740}
     m_Position: {x: 530, y: 1010, z: 0}
@@ -238,7 +241,7 @@ AnimatorStateTransition:
   m_ExitTime: 0.75
   m_HasExitTime: 0
   m_HasFixedDuration: 1
-  m_InterruptionSource: 0
+  m_InterruptionSource: 1
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 0
 --- !u!1101 &-3689604966022011705

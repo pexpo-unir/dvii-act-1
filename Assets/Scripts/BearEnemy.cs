@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using AI;
+using DG.Tweening;
 using UI;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class BearEnemy : MonoBehaviour, IDamageable
@@ -10,9 +13,11 @@ public class BearEnemy : MonoBehaviour, IDamageable
     private static readonly int GetHitFrontAnim = Animator.StringToHash("Get Hit Front");
     private static readonly int StunnedLoopAnim = Animator.StringToHash("Stunned Loop");
     private static readonly int WalkForwardAnim = Animator.StringToHash("WalkForward");
+    private static readonly int DeathAnim = Animator.StringToHash("Death");
 
     private readonly string[] _attackAnimationNames = { "Attack1", "Attack2", "Attack3", "Attack5", };
 
+    public event Action<BearEnemy> OnBearDied;
 
     private Animator _animator;
 
@@ -20,14 +25,17 @@ public class BearEnemy : MonoBehaviour, IDamageable
 
     private StateMachine _stateMachine;
 
+    [Header("VFX")] [SerializeField] Renderer meshRenderer;
 
-    [SerializeField] private float timeStunned = 1.5f;
+    [SerializeField] private float dissolveEffectTime = 10.0f;
 
-    [SerializeField] private float movementSpeed = 2.5f;
+    [Header("Combat")] [SerializeField] private float timeStunned = 1.5f;
+
+    [Header("Movement")] [SerializeField] private float movementSpeed = 2.5f;
 
     [SerializeField] private float angularRotationSpeed = 5.0f;
 
-    [SerializeField] private float attackDistance = 3.0f;
+    [Header("Attack")] [SerializeField] private float attackDistance = 3.0f;
 
     [SerializeField] private float attackCooldownTime = 2.0f;
 
@@ -37,18 +45,37 @@ public class BearEnemy : MonoBehaviour, IDamageable
 
     [SerializeField] private LayerMask playerLayer;
 
-    [SerializeField] private int damage = 1;
+    [SerializeField] private int damageDone = 1;
 
-    [SerializeField] private int maxHealth = 5;
+    [Header("Health")] [SerializeField] private int maxHealth = 5;
 
     [SerializeField] private int health = 5;
 
     [SerializeField] private ResourceBar healthBar;
 
+    private Coroutine _stunRoutine;
+
+    [Header("SFX | Attack")] [SerializeField]
+    private AudioClip[] attackClips;
+
+    [SerializeField] private Vector2 attackPitchRange = new(0.85f, 1.15f);
+
+    [Header("SFX | Death")] [SerializeField]
+    private AudioClip[] deathClips;
+
+    [SerializeField] private Vector2 deathPitchRange = new(0.35f, 0.55f);
+
+    [Header("SFX | Hit")] [SerializeField] private AudioClip[] hitClips;
+
+    [SerializeField] private Vector2 hitPitchRange = new(0.6f, 0.7f);
+
+    private AudioSource _audioSource;
+
     private void Awake()
     {
         _animator = GetComponentInChildren<Animator>();
         _navMeshAgent = GetComponentInChildren<NavMeshAgent>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -64,14 +91,13 @@ public class BearEnemy : MonoBehaviour, IDamageable
         _navMeshAgent.angularSpeed = angularRotationSpeed;
         _navMeshAgent.stoppingDistance = attackDistance;
 
-        float healthPercent = (float)health / maxHealth;
-        healthBar.SetPercentValue(healthPercent);
+        healthBar.SetPercentValue((float)health / maxHealth);
 
         var context = new StateContext
         {
             AttackDistance = attackDistance,
             Owner = this,
-            Player = playerGameObject.GetComponent<CharacterBase>(),
+            Player = playerGameObject.GetComponent<PlayerCharacter>(),
             AttackCooldownTime = attackCooldownTime,
         };
 
@@ -86,34 +112,80 @@ public class BearEnemy : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damage)
     {
-        health -= damage;
-
-        float healthPercent = (float)health / maxHealth;
-        healthBar.SetPercentValue(healthPercent);
-
         if (health <= 0)
         {
-            StopMovement();
-            _animator.SetBool("Death", true);
-            _stateMachine.Enabled = false;
             return;
         }
 
-        _stateMachine.Enabled = false;
-        _navMeshAgent.isStopped = true;
+        health -= damage;
+
+        healthBar.SetPercentValue((float)health / maxHealth);
+
+        if (health <= 0)
+        {
+            StopAllCoroutines();
+
+            StopStunned();
+            StopMovement();
+
+            _stateMachine.Enabled = false;
+
+            StartCoroutine(StartDeath());
+
+            return;
+        }
 
         _animator.SetTrigger(GetHitFrontAnim);
+
+        PlayHitSound();
+
+        _stateMachine.Enabled = false;
+        StopMovement();
+
         _animator.SetBool(StunnedLoopAnim, true);
 
-        StartCoroutine(StunCoroutine());
+        _stunRoutine = StartCoroutine(StunCoroutine());
+    }
+
+    private IEnumerator StartDeath()
+    {
+        _animator.SetBool(DeathAnim, true);
+        while (_animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
+        {
+            yield return null;
+        }
+
+        PlayDeathSound();
+        OnBearDied?.Invoke(this);
+
+        while (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime < .85f)
+        {
+            yield return null;
+        }
+
+        FinishDeath();
+    }
+
+    private void FinishDeath()
+    {
+        var seq = DOTween.Sequence();
+        seq.Append(healthBar.transform.DOScale(0.01f, dissolveEffectTime).SetEase(Ease.InBack));
+        seq.Join(meshRenderer.material.DOFloat(-0.6f, "_DissolveAmount", dissolveEffectTime));
+        seq.AppendCallback(() => Destroy(gameObject));
     }
 
     private IEnumerator StunCoroutine()
     {
         yield return new WaitForSeconds(timeStunned);
 
+        StopStunned();
+    }
+
+    private void StopStunned()
+    {
         _animator.SetBool(StunnedLoopAnim, false);
         _stateMachine.Enabled = true;
+        _stunRoutine = null;
     }
 
     public void MoveTo(Vector3 position)
@@ -145,8 +217,10 @@ public class BearEnemy : MonoBehaviour, IDamageable
         int index = Random.Range(0, _attackAnimationNames.Length);
         _animator.SetTrigger(_attackAnimationNames[index]);
 
-        Collider[] colliders = new Collider[5];
-        var size = Physics.OverlapSphereNonAlloc(attackPoint.position, attackRadius, colliders, playerLayer);
+        PlayAttackSound();
+
+        var colliders = new Collider[5];
+        Physics.OverlapSphereNonAlloc(attackPoint.position, attackRadius, colliders, playerLayer);
         foreach (var coll in colliders)
         {
             if (!coll)
@@ -155,7 +229,43 @@ public class BearEnemy : MonoBehaviour, IDamageable
             }
 
             var damageable = coll.GetComponent<IDamageable>();
-            damageable?.TakeDamage(damage);
+            damageable?.TakeDamage(damageDone);
         }
+    }
+
+    private void PlayAttackSound()
+    {
+        if (attackClips.Length == 0)
+        {
+            return;
+        }
+
+        var clip = attackClips[Random.Range(0, attackClips.Length)];
+        _audioSource.pitch = Random.Range(attackPitchRange.x, attackPitchRange.y);
+        _audioSource.PlayOneShot(clip);
+    }
+
+    private void PlayDeathSound()
+    {
+        if (deathClips.Length == 0)
+        {
+            return;
+        }
+
+        var clip = deathClips[Random.Range(0, deathClips.Length)];
+        _audioSource.pitch = Random.Range(deathPitchRange.x, deathPitchRange.y);
+        _audioSource.PlayOneShot(clip);
+    }
+
+    private void PlayHitSound()
+    {
+        if (hitClips.Length == 0)
+        {
+            return;
+        }
+
+        var clip = hitClips[Random.Range(0, hitClips.Length)];
+        _audioSource.pitch = Random.Range(hitPitchRange.x, hitPitchRange.y);
+        _audioSource.PlayOneShot(clip);
     }
 }

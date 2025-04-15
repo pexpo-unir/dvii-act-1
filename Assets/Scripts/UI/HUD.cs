@@ -1,16 +1,36 @@
-using System.Collections;
+using DG.Tweening;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace UI
 {
     public class HUD : MonoBehaviour
     {
-        [SerializeField] private ResourceBar healthBar;
+        [Header("Player Resources")] [SerializeField]
+        private ResourceBar healthBar;
+
         [SerializeField] private ResourceBar energyBar;
+
         [SerializeField] private ResourceBar defenseBar;
 
-        [SerializeField] private Image backdropDeath;
+        [Header("Death UI Elements")] [SerializeField]
+        private Image backdropDeath;
+
+        [SerializeField] private TMP_Text loseText;
+
+        [SerializeField] private Button restartButton;
+
+        [SerializeField] private float backdropDeathAlphaEndValue = 0.99f;
+
+        private void Start()
+        {
+            loseText.transform.localScale = Vector3.zero;
+            restartButton.transform.localScale = Vector3.zero;
+
+            restartButton.onClick.AddListener(RestartLevel);
+        }
 
         public void UpdateHealth(float value)
         {
@@ -29,19 +49,19 @@ namespace UI
 
         public void Death()
         {
-            StartCoroutine(DeathCoroutine());
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
+            var seq = DOTween.Sequence();
+
+            seq.Append(backdropDeath.DOFade(backdropDeathAlphaEndValue, 2f));
+            seq.Append(loseText.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack));
+            seq.Append(restartButton.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack));
         }
 
-        private IEnumerator DeathCoroutine()
+        private static void RestartLevel()
         {
-            var color = backdropDeath.color;
-
-            while (color.a < 1)
-            {
-                color = new Color(color.r, color.g, color.b, color.a + 0.05f);
-                backdropDeath.color = color;
-                yield return new WaitForSeconds(0.05f);
-            }
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }

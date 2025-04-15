@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 _inputDirection = Vector3.zero;
     private Vector3 _movementDirection = Vector3.zero;
 
-    [SerializeField] private CharacterBase character;
+    [SerializeField] private PlayerCharacter playerCharacter;
 
     [SerializeField] private Transform cameraTransform;
     
@@ -17,8 +17,6 @@ public class PlayerController : MonoBehaviour
     
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-
         cinemachineCamera.Priority = 100;
         aimingCamera.Priority = 0;
     }
@@ -30,12 +28,11 @@ public class PlayerController : MonoBehaviour
         _movementDirection = cameraTransform.forward * _inputDirection.z + cameraTransform.right * _inputDirection.x;
         _movementDirection.y = 0;
 
-        character.InputDirection = _movementDirection.normalized;
-        character.ShouldJump = Input.GetButton("Jump");
+        playerCharacter.InputDirection = _movementDirection.normalized;
 
         if (Input.GetMouseButtonDown(0))
         {
-            character.Shoot();
+            playerCharacter.Shoot();
         }
 
         if (Input.GetMouseButtonDown(1) && !_isAiming)
@@ -44,7 +41,7 @@ public class PlayerController : MonoBehaviour
             cinemachineCamera.Priority = 0;
             aimingCamera.Priority = 100;
             
-            character.StartAim();
+            playerCharacter.StartAim();
         }
         
         if (Input.GetMouseButtonUp(1) && _isAiming)
@@ -53,7 +50,7 @@ public class PlayerController : MonoBehaviour
             cinemachineCamera.Priority = 100;
             aimingCamera.Priority = 0;
             
-            character.EndAim();
+            playerCharacter.EndAim();
         }
     }
 }

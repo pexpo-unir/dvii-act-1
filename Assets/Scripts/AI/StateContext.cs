@@ -4,7 +4,7 @@ namespace AI
     {
         public BearEnemy Owner { get; set; }
 
-        public CharacterBase Player { get; set; }
+        public PlayerCharacter Player { get; set; }
 
         public float AttackDistance { get; set; }
 

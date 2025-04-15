@@ -679,6 +679,7 @@ GameObject:
   - component: {fileID: 8704792900713486184}
   - component: {fileID: 3127709859190209624}
   - component: {fileID: 6693436825319927711}
+  - component: {fileID: 3226553967799238369}
   m_Layer: 0
   m_Name: BearEnemy
   m_TagString: Enemy
@@ -717,6 +718,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8382ad81b87cb2740b7cf1879b921b42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshRenderer: {fileID: 2953167135001571932}
+  dissolveEffectTime: 2
   timeStunned: 3.33
   movementSpeed: 2.5
   angularRotationSpeed: 150
@@ -727,10 +730,19 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 1024
-  damage: 1
-  maxHealth: 5
-  health: 2
+  damageDone: 1
+  maxHealth: 3
+  health: 3
   healthBar: {fileID: 3209001396657278463}
+  attackClips:
+  - {fileID: 8300000, guid: 5c4323721b71ea94fa3df82b52ec7e02, type: 3}
+  attackPitchRange: {x: 0.85, y: 1.15}
+  deathClips:
+  - {fileID: 8300000, guid: 5c4323721b71ea94fa3df82b52ec7e02, type: 3}
+  deathPitchRange: {x: 0.5, y: 0.7}
+  hitClips:
+  - {fileID: 8300000, guid: 5c4323721b71ea94fa3df82b52ec7e02, type: 3}
+  hitPitchRange: {x: 0.6, y: 0.7}
 --- !u!95 &8704792900713486184
 Animator:
   serializedVersion: 7
@@ -798,6 +810,103 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!82 &3226553967799238369
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3260161228046839432}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &3351129763058692701
 GameObject:
   m_ObjectHideFlags: 0
@@ -1163,6 +1272,7 @@ GameObject:
   - component: {fileID: 3348855336093876751}
   - component: {fileID: 3666806171166797556}
   - component: {fileID: 2175739679866200581}
+  - component: {fileID: 1155479860516549769}
   m_Layer: 5
   m_Name: EnemyCanvas
   m_TagString: Untagged
@@ -1177,7 +1287,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4699491244489923165}
-  m_LocalRotation: {x: -0.0080520995, y: -0.97121644, z: -0.033173554, w: 0.23573993}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.009}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 1
@@ -1211,7 +1321,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &3666806171166797556
 MonoBehaviour:
@@ -1253,6 +1363,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1155479860516549769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4699491244489923165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bd402a591deaf646ae9b3d0588cf3f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4722870497448980001
 GameObject:
   m_ObjectHideFlags: 0
@@ -1794,7 +1916,7 @@ Transform:
   m_GameObject: {fileID: 7143837083938044310}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: 0, z: -0.974}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1823,7 +1945,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b614f09dade340f4aa841aafe3df42b9, type: 2}
+  - {fileID: 2100000, guid: 54bb7066a4ea72c4f833f9113a38c9e7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2468,15 +2590,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1543031771147705549, guid: 65bdd3290976d2b4bbbe4b3d23b730a9, type: 3}
       propertyPath: m_Color.b
-      value: 0
+      value: 0.3529412
       objectReference: {fileID: 0}
     - target: {fileID: 1543031771147705549, guid: 65bdd3290976d2b4bbbe4b3d23b730a9, type: 3}
       propertyPath: m_Color.g
-      value: 0
+      value: 0.40000004
       objectReference: {fileID: 0}
     - target: {fileID: 1543031771147705549, guid: 65bdd3290976d2b4bbbe4b3d23b730a9, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.882353
+      objectReference: {fileID: 0}
+    - target: {fileID: 2009367582043908380, guid: 65bdd3290976d2b4bbbe4b3d23b730a9, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2009367582043908380, guid: 65bdd3290976d2b4bbbe4b3d23b730a9, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 3925904877480267990, guid: 65bdd3290976d2b4bbbe4b3d23b730a9, type: 3}
       propertyPath: m_Name
