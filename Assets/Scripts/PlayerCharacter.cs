@@ -1,9 +1,13 @@
+using System;
 using UI;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerCharacter : MonoBehaviour, IDamageable
 {
+    public event Action<PlayerCharacter, float> OnTakeDamage;
+
     private static readonly int WalkingAnim = Animator.StringToHash("Walking");
     private static readonly int IsAimingAnim = Animator.StringToHash("IsAiming");
     private static readonly int ShootAnim = Animator.StringToHash("Shoot");
@@ -211,7 +215,9 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
     {
         health -= damage;
 
-        hud.UpdateHealth((float)health / maxHealth);
+        float healthPercent = (float)health / maxHealth;
+        hud.UpdateHealth(healthPercent);
+        OnTakeDamage?.Invoke(this, healthPercent);
 
         if (health <= 0)
         {

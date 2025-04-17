@@ -9645,6 +9645,7 @@ MonoBehaviour:
   playerController: {fileID: 467362537}
   hud: {fileID: 810607019}
   bearSpawner: {fileID: 1073188037}
+  ppManager: {fileID: 1060901874}
 --- !u!4 &551305950
 Transform:
   m_ObjectHideFlags: 0
@@ -16982,6 +16983,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerCharacter
       objectReference: {fileID: 0}
+    - target: {fileID: 509133786774467484, guid: 9402eccec8398fe428411001c1633dbe, type: 3}
+      propertyPath: m_Volume
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 3642175037293137404, guid: 9402eccec8398fe428411001c1633dbe, type: 3}
       propertyPath: hud
       value: 
@@ -18422,6 +18427,72 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 82188904581423c4a9ed3fbf3286ccdd, type: 3}
   m_PrefabInstance: {fileID: 1742880263}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1060901871
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1060901873}
+  - component: {fileID: 1060901872}
+  - component: {fileID: 1060901874}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1060901872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060901871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 20cf4a27839dbbe49986e67e99a2e28c, type: 2}
+--- !u!4 &1060901873
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060901871}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.04139, y: 0.56012964, z: 8.452642}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1060901874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060901871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f76f5951613542f49814d81327135501, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ppVolume: {fileID: 1060901872}
+  breathingAberrationRangeInMenu: {x: 0, y: 0.2}
+  breathingAberrationVariation: 0.25
+  aberrationFlickerSpeed: 0.1
 --- !u!1 &1065754138
 GameObject:
   m_ObjectHideFlags: 0
@@ -41412,6 +41483,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1060901873}
   - {fileID: 1329850193}
   - {fileID: 551305950}
   - {fileID: 759414594}

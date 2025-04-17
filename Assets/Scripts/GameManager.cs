@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; }
+
     [SerializeField] private CinemachineCamera menuCamera;
     [SerializeField] private Button startGameButton;
     [SerializeField] private Canvas menuCanvas;
@@ -16,6 +18,20 @@ public class GameManager : MonoBehaviour
     [SerializeField] private HUD hud;
     [SerializeField] private BearSpawner bearSpawner;
 
+    [SerializeField] private PostprocessManager ppManager;
+
+    private void Awake()
+    {
+        if (Instance && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+    
     private void Start()
     {
         startGameButton.onClick.AddListener(StartLevel);
@@ -34,11 +50,18 @@ public class GameManager : MonoBehaviour
         menuCanvas.gameObject.SetActive(false);
         menuBear.gameObject.SetActive(false);
 
+        ppManager.StartGameplay();
+
         playerController.enabled = true;
         hud.gameObject.SetActive(true);
 
         menuCamera.Priority.Value = 0;
 
         bearSpawner.StartSpawn();
+    }
+
+    public void UpdateChromaticAberration(float intensity)
+    {
+        ppManager.UpdateChromaticAberration(intensity);
     }
 }

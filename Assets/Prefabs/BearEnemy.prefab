@@ -739,10 +739,10 @@ MonoBehaviour:
   attackPitchRange: {x: 0.85, y: 1.15}
   deathClips:
   - {fileID: 8300000, guid: 5c4323721b71ea94fa3df82b52ec7e02, type: 3}
-  deathPitchRange: {x: 0.5, y: 0.7}
+  deathPitchRange: {x: 0.65, y: 0.75}
   hitClips:
   - {fileID: 8300000, guid: 5c4323721b71ea94fa3df82b52ec7e02, type: 3}
-  hitPitchRange: {x: 0.6, y: 0.7}
+  hitPitchRange: {x: 1.25, y: 1.35}
 --- !u!95 &8704792900713486184
 Animator:
   serializedVersion: 7

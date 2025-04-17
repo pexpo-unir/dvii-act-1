@@ -9,16 +9,23 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerCharacter playerCharacter;
 
     [SerializeField] private Transform cameraTransform;
-    
+
     [SerializeField] private CinemachineCamera aimingCamera;
     [SerializeField] private CinemachineCamera cinemachineCamera;
 
     private bool _isAiming = false;
-    
+
     void Start()
     {
         cinemachineCamera.Priority = 100;
         aimingCamera.Priority = 0;
+
+        playerCharacter.OnTakeDamage += OnPlayerTakeDamage;
+    }
+
+    private static void OnPlayerTakeDamage(PlayerCharacter pCharacter, float healthPercent)
+    {
+        GameManager.Instance.UpdateChromaticAberration(healthPercent);
     }
 
     void Update()
@@ -40,16 +47,16 @@ public class PlayerController : MonoBehaviour
             _isAiming = true;
             cinemachineCamera.Priority = 0;
             aimingCamera.Priority = 100;
-            
+
             playerCharacter.StartAim();
         }
-        
+
         if (Input.GetMouseButtonUp(1) && _isAiming)
         {
             _isAiming = false;
             cinemachineCamera.Priority = 100;
             aimingCamera.Priority = 0;
-            
+
             playerCharacter.EndAim();
         }
     }
