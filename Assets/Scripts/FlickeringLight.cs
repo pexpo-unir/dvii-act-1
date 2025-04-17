@@ -4,12 +4,16 @@ public class FlickeringLight : MonoBehaviour
 {
     private Light _light;
 
-    private float _flicker;
-    public float minIntensity = 0.05f;
-    public float maxIntensity = 0.75f;
-    public float flickerSpeed = 0.1f;
+    [SerializeField] private float minIntensity = 0.05f;
+
+    [SerializeField] private float maxIntensity = 0.75f;
+
+    [SerializeField] private float flickerSpeed = 0.1f;
+
+    [SerializeField] private float flickerSpeedChange = 10f;
 
     private float _nextFlickerTime = 0f;
+
     private float _targetIntensity;
 
     private void Awake()
@@ -30,6 +34,6 @@ public class FlickeringLight : MonoBehaviour
             _nextFlickerTime = Time.time + flickerSpeed;
         }
 
-        _light.intensity = Mathf.Lerp(_light.intensity, _targetIntensity, Time.deltaTime * 10f);
+        _light.intensity = Mathf.Lerp(_light.intensity, _targetIntensity, Time.deltaTime * flickerSpeedChange);
     }
 }

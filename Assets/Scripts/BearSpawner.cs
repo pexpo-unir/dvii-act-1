@@ -7,20 +7,36 @@ using Random = UnityEngine.Random;
 
 public class BearSpawner : MonoBehaviour
 {
-    [SerializeField] private Transform[] spawnPoints;
+    [Header("Spawner")] [SerializeField] private Transform[] spawnPoints;
+
     [SerializeField] private BearEnemy bearPrefab;
 
     [SerializeField] private float timeBetweenRounds = 60f;
+
     [SerializeField] private float timeBetweenSpawn = 1f;
+
     [SerializeField] private int enemiesPerRound = 3;
+
     [SerializeField] private int increasePerRound = 2;
 
-    [SerializeField] private Canvas canvasRoundInfo;
+    [Header("Canvas")] [SerializeField] private Canvas canvasRoundInfo;
+
     [SerializeField] private TMP_Text currentRoundText;
+
     [SerializeField] private TMP_Text bearsKilledText;
+
     [SerializeField] private TMP_Text timeLeftText;
 
+    [SerializeField] private float textScale = 1.0f;
+
+    [SerializeField] private float textScaleEffect = 1.15f;
+
+    [SerializeField] private float textScaleEffectDuration = 0.333f;
+
+    [SerializeField] private int timeRemainingRound = 2;
+
     private int _currentRound = 1;
+
     private int _bearsKilled = 0;
 
     private void Start()
@@ -57,9 +73,10 @@ public class BearSpawner : MonoBehaviour
     {
         for (int i = 0; i < enemiesPerRound; i++)
         {
-            Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+            var spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
             var bearEnemy = Instantiate(bearPrefab, spawnPoint.position, spawnPoint.rotation);
             bearEnemy.OnBearDied += UpdateKilledBearCount;
+
             yield return new WaitForSeconds(timeBetweenSpawn);
         }
     }
@@ -69,9 +86,7 @@ public class BearSpawner : MonoBehaviour
         _bearsKilled++;
         bearsKilledText.text = $"Bjǫrn's killed: {_bearsKilled}";
 
-        var seq = DOTween.Sequence();
-        seq.Append(bearsKilledText.transform.DOScale(1.15f, 0.333f).SetEase(Ease.OutBack));
-        seq.Append(bearsKilledText.transform.DOScale(1f, 0.333f).SetEase(Ease.OutBack));
+        ApplyTextMeshProTextAnimation(bearsKilledText);
     }
 
     private void UpdateCurrentRound()
@@ -79,9 +94,7 @@ public class BearSpawner : MonoBehaviour
         _currentRound++;
         currentRoundText.text = $"Current round: {_currentRound}";
 
-        var seq = DOTween.Sequence();
-        seq.Append(currentRoundText.transform.DOScale(1.15f, 0.333f).SetEase(Ease.OutBack));
-        seq.Append(currentRoundText.transform.DOScale(1f, 0.333f).SetEase(Ease.OutBack));
+        ApplyTextMeshProTextAnimation(currentRoundText);
     }
 
     private void UpdateTimeLeft()
@@ -90,17 +103,24 @@ public class BearSpawner : MonoBehaviour
 
         float timeLeft = timeBetweenRounds;
 
-        var seq = DOTween.Sequence();
-        seq.Append(timeLeftText.transform.DOScale(1.15f, 0.333f).SetEase(Ease.OutBack));
-        seq.Append(timeLeftText.transform.DOScale(1f, 0.333f).SetEase(Ease.OutBack));
+        var seq = ApplyTextMeshProTextAnimation(timeLeftText);
         seq.JoinCallback(() =>
         {
             DOTween.To(() => timeLeft, x =>
                 {
                     timeLeft = x;
-                    timeLeftText.text = $"Time remaining: {Math.Round(timeLeft, 2)}";
+                    timeLeftText.text = $"Time remaining: {Math.Round(timeLeft, timeRemainingRound)}";
                 }, 0, timeBetweenRounds)
                 .SetEase(Ease.Linear);
         });
+    }
+
+    private Sequence ApplyTextMeshProTextAnimation(TMP_Text text)
+    {
+        var seq = DOTween.Sequence();
+        seq.Append(text.transform.DOScale(textScaleEffect, textScaleEffectDuration).SetEase(Ease.OutBack));
+        seq.Append(text.transform.DOScale(textScale, textScaleEffectDuration).SetEase(Ease.OutBack));
+
+        return seq;
     }
 }

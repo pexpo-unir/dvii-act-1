@@ -441,6 +441,9 @@ MonoBehaviour:
   loseText: {fileID: 8284679985717109461}
   restartButton: {fileID: 4799144814125509450}
   backdropDeathAlphaEndValue: 0.99
+  backdropDeathEffectDuration: 3.33
+  backdropDeathElementInDuration: 0.5
+  backdropDeathElementInScale: 1
 --- !u!1 &7970001703363456503
 GameObject:
   m_ObjectHideFlags: 0

@@ -9641,6 +9641,8 @@ MonoBehaviour:
   startGameButton: {fileID: 333610270}
   menuCanvas: {fileID: 484450631}
   backdropStart: {fileID: 1612935830}
+  backdropStartColor: {r: 0, g: 0, b: 0, a: 1}
+  fadeOutDuration: 5
   menuBear: {fileID: 1095960424}
   playerController: {fileID: 467362537}
   hud: {fileID: 810607019}
@@ -16017,30 +16019,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1758847808023469884, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1758847808023469884, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1758847808023469884, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1758847808023469884, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1758847808023469884, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1758847808023469884, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6227707143754787861, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
       propertyPath: m_Name
       value: HUD
@@ -16982,10 +16960,6 @@ PrefabInstance:
     - target: {fileID: 483393383055372503, guid: 9402eccec8398fe428411001c1633dbe, type: 3}
       propertyPath: m_Name
       value: PlayerCharacter
-      objectReference: {fileID: 0}
-    - target: {fileID: 509133786774467484, guid: 9402eccec8398fe428411001c1633dbe, type: 3}
-      propertyPath: m_Volume
-      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 3642175037293137404, guid: 9402eccec8398fe428411001c1633dbe, type: 3}
       propertyPath: hud
@@ -18417,6 +18391,7 @@ MonoBehaviour:
   minIntensity: 0.05
   maxIntensity: 0.75
   flickerSpeed: 0.1
+  flickerSpeedChange: 10
 --- !u!4 &1052774985 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000010154436032, guid: 61a6b3a108030e54ba372fe7097916d0, type: 3}
@@ -18491,8 +18466,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ppVolume: {fileID: 1060901872}
   breathingAberrationRangeInMenu: {x: 0, y: 0.2}
-  breathingAberrationVariation: 0.25
   aberrationFlickerSpeed: 0.1
+  aberrationFlickerSpeedChange: 10
 --- !u!1 &1065754138
 GameObject:
   m_ObjectHideFlags: 0
@@ -19467,6 +19442,10 @@ MonoBehaviour:
   currentRoundText: {fileID: 1216598220}
   bearsKilledText: {fileID: 310285234}
   timeLeftText: {fileID: 1845714695}
+  textScale: 1
+  textScaleEffect: 1.15
+  textScaleEffectDuration: 0.333
+  timeRemainingRound: 2
 --- !u!4 &1073188038
 Transform:
   m_ObjectHideFlags: 0

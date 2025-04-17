@@ -8,16 +8,16 @@ public class PostprocessManager : MonoBehaviour
 
     [SerializeField] private Vector2 breathingAberrationRangeInMenu = new(0.0f, 0.15f);
 
-    [SerializeField] private float breathingAberrationVariation = 0.25f;
-
     private ChromaticAberration _chromaticAberration;
 
     [SerializeField] private float aberrationFlickerSpeed = 0.1f;
 
+    [SerializeField] private float aberrationFlickerSpeedChange = 10f;
+
     private float _nextFlickerTime = 0f;
 
     private float _targetIntensity;
-    
+
     private bool _gameplayStarted;
 
     private void Awake()
@@ -39,7 +39,8 @@ public class PostprocessManager : MonoBehaviour
         }
 
         _chromaticAberration.intensity.value =
-            Mathf.Lerp(_chromaticAberration.intensity.value, _targetIntensity, Time.deltaTime * 10f);
+            Mathf.Lerp(_chromaticAberration.intensity.value, _targetIntensity,
+                Time.deltaTime * aberrationFlickerSpeedChange);
     }
 
     public void StartGameplay()

@@ -4,9 +4,16 @@ namespace UI
 {
     public class LookAtCameraUI : MonoBehaviour
     {
-        void LateUpdate()
+        private Camera _camera;
+
+        private void Start() => _camera = Camera.main;
+
+        private void LateUpdate()
         {
-            transform.LookAt(Camera.main.transform);
+            if (_camera)
+            {
+                transform.LookAt(_camera.transform);
+            }
         }
     }
 }

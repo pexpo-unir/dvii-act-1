@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
 
     private bool _isAiming = false;
 
-    void Start()
+    private void Start()
     {
         cinemachineCamera.Priority = 100;
         aimingCamera.Priority = 0;
@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
         GameManager.Instance.UpdateChromaticAberration(healthPercent);
     }
 
-    void Update()
+    private void Update()
     {
         _inputDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         _inputDirection.Normalize();

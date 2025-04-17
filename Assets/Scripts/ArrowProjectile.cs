@@ -7,13 +7,11 @@ public class ArrowProjectile : MonoBehaviour
 
     private Collider _collider;
 
+    [SerializeField] private float launchForce = 30f;
 
-    public float launchForce = 30f;
+    [SerializeField] private float lifeTime = 5f;
 
-    public float lifeTime = 5f;
-
-    public int damage = 1;
-
+    [SerializeField] private int damage = 1;
 
     private void Awake()
     {
@@ -29,7 +27,7 @@ public class ArrowProjectile : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_rb.linearVelocity.sqrMagnitude > 0.1f)
+        if (_rb.linearVelocity.sqrMagnitude > float.Epsilon)
         {
             transform.rotation = Quaternion.LookRotation(_rb.linearVelocity);
         }

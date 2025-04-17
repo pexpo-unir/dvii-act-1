@@ -25,6 +25,8 @@ public class BearEnemy : MonoBehaviour, IDamageable
 
     private StateMachine _stateMachine;
 
+    private AudioSource _audioSource;
+
     [Header("VFX")] [SerializeField] Renderer meshRenderer;
 
     [SerializeField] private float dissolveEffectTime = 10.0f;
@@ -53,8 +55,6 @@ public class BearEnemy : MonoBehaviour, IDamageable
 
     [SerializeField] private ResourceBar healthBar;
 
-    private Coroutine _stunRoutine;
-
     [Header("SFX | Attack")] [SerializeField]
     private AudioClip[] attackClips;
 
@@ -68,8 +68,6 @@ public class BearEnemy : MonoBehaviour, IDamageable
     [Header("SFX | Hit")] [SerializeField] private AudioClip[] hitClips;
 
     [SerializeField] private Vector2 hitPitchRange = new(0.6f, 0.7f);
-
-    private AudioSource _audioSource;
 
     private void Awake()
     {
@@ -144,7 +142,7 @@ public class BearEnemy : MonoBehaviour, IDamageable
 
         _animator.SetBool(StunnedLoopAnim, true);
 
-        _stunRoutine = StartCoroutine(StunCoroutine());
+        StartCoroutine(StunCoroutine());
     }
 
     private IEnumerator StartDeath()
@@ -185,7 +183,6 @@ public class BearEnemy : MonoBehaviour, IDamageable
     {
         _animator.SetBool(StunnedLoopAnim, false);
         _stateMachine.Enabled = true;
-        _stunRoutine = null;
     }
 
     public void MoveTo(Vector3 position)
@@ -228,8 +225,10 @@ public class BearEnemy : MonoBehaviour, IDamageable
                 continue;
             }
 
-            var damageable = coll.GetComponent<IDamageable>();
-            damageable?.TakeDamage(damageDone);
+            if (coll.TryGetComponent(out IDamageable damageable))
+            {
+                damageable.TakeDamage(damageDone);
+            }
         }
     }
 

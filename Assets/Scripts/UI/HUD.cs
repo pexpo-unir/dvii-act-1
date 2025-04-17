@@ -24,6 +24,12 @@ namespace UI
 
         [SerializeField] private float backdropDeathAlphaEndValue = 0.99f;
 
+        [SerializeField] private float backdropDeathEffectDuration = 5f;
+
+        [SerializeField] private float backdropDeathElementInDuration = 0.5f;
+
+        [SerializeField] private float backdropDeathElementInScale = 1f;
+
         private void Start()
         {
             loseText.transform.localScale = Vector3.zero;
@@ -53,10 +59,11 @@ namespace UI
             Cursor.lockState = CursorLockMode.None;
 
             var seq = DOTween.Sequence();
-
-            seq.Append(backdropDeath.DOFade(backdropDeathAlphaEndValue, 2f));
-            seq.Append(loseText.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack));
-            seq.Append(restartButton.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack));
+            seq.Append(backdropDeath.DOFade(backdropDeathAlphaEndValue, backdropDeathEffectDuration));
+            seq.Append(loseText.transform.DOScale(backdropDeathElementInScale, backdropDeathElementInDuration)
+                .SetEase(Ease.OutBack));
+            seq.Append(restartButton.transform.DOScale(backdropDeathElementInScale, backdropDeathElementInDuration)
+                .SetEase(Ease.OutBack));
         }
 
         private static void RestartLevel()
