@@ -16019,6 +16019,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1758847808023469884, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1758847808023469884, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1758847808023469884, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1758847808023469884, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1758847808023469884, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1758847808023469884, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6227707143754787861, guid: 29b71b9b2e7f8ff458db81c2e9d84018, type: 3}
       propertyPath: m_Name
       value: HUD
@@ -19436,8 +19460,8 @@ MonoBehaviour:
   bearPrefab: {fileID: 590375458257227577, guid: 4c9efdad73f748c408f8152642a43ac5, type: 3}
   timeBetweenRounds: 25
   timeBetweenSpawn: 1
-  enemiesPerRound: 3
-  increasePerRound: 2
+  enemiesPerRound: 2
+  increasePerRound: 1
   canvasRoundInfo: {fileID: 491224110}
   currentRoundText: {fileID: 1216598220}
   bearsKilledText: {fileID: 310285234}

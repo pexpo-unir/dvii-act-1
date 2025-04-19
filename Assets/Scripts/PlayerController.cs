@@ -1,5 +1,6 @@
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,51 +14,114 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CinemachineCamera aimingCamera;
     [SerializeField] private CinemachineCamera cinemachineCamera;
 
-    private bool _isAiming = false;
+    private InputSystem_Actions _inputActions;
+
+    private void Awake()
+    {
+        _inputActions = new InputSystem_Actions();
+    }
+
+    private void OnEnable()
+    {
+        _inputActions.Player.Enable();
+
+        _inputActions.Player.Look.performed += LookInput;
+
+        _inputActions.Player.Move.performed += MoveInput;
+        _inputActions.Player.Move.canceled += CanceledMoveInput;
+
+        _inputActions.Player.Aim.started += StartedAimInput;
+        _inputActions.Player.Aim.canceled += CanceledAimInput;
+
+        _inputActions.Player.Attack.performed += AttackInput;
+    }
+
+    private void OnDisable()
+    {
+        _inputActions.Player.Attack.performed -= AttackInput;
+
+        _inputActions.Player.Aim.canceled -= CanceledAimInput;
+        _inputActions.Player.Aim.started -= StartedAimInput;
+
+        _inputActions.Player.Move.canceled -= CanceledMoveInput;
+        _inputActions.Player.Move.performed -= MoveInput;
+
+        _inputActions.Player.Look.performed -= LookInput;
+
+        _inputActions.Player.Disable();
+
+        playerCharacter.OnTakeDamage -= PlayerTakeDamage;
+    }
 
     private void Start()
     {
         cinemachineCamera.Priority = 100;
         aimingCamera.Priority = 0;
 
-        playerCharacter.OnTakeDamage += OnPlayerTakeDamage;
+        playerCharacter.OnTakeDamage += PlayerTakeDamage;
     }
 
-    private static void OnPlayerTakeDamage(PlayerCharacter pCharacter, float healthPercent)
+    private static void PlayerTakeDamage(PlayerCharacter pCharacter, float healthPercent)
     {
         GameManager.Instance.UpdateChromaticAberration(healthPercent);
     }
 
-    private void Update()
+    private void LookInput(InputAction.CallbackContext obj)
     {
-        _inputDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-        _inputDirection.Normalize();
-        _movementDirection = cameraTransform.forward * _inputDirection.z + cameraTransform.right * _inputDirection.x;
-        _movementDirection.y = 0;
+        RecalculateMovement();
+    }
 
-        playerCharacter.InputDirection = _movementDirection.normalized;
+    private void MoveInput(InputAction.CallbackContext context)
+    {
+        _inputDirection = context.ReadValue<Vector2>();
+        RecalculateMovement();
+    }
 
-        if (Input.GetMouseButtonDown(0))
+    private void RecalculateMovement()
+    {
+        if (_inputDirection.sqrMagnitude < float.Epsilon)
         {
-            playerCharacter.Shoot();
+            playerCharacter.InputDirection = Vector3.zero;
+            return;
         }
 
-        if (Input.GetMouseButtonDown(1) && !_isAiming)
-        {
-            _isAiming = true;
-            cinemachineCamera.Priority = 0;
-            aimingCamera.Priority = 100;
+        var forward = cameraTransform.forward;
+        forward.y = 0;
+        forward.Normalize();
 
-            playerCharacter.StartAim();
-        }
+        var right = cameraTransform.right;
+        right.y = 0;
+        right.Normalize();
 
-        if (Input.GetMouseButtonUp(1) && _isAiming)
-        {
-            _isAiming = false;
-            cinemachineCamera.Priority = 100;
-            aimingCamera.Priority = 0;
+        _movementDirection = forward * _inputDirection.y + right * _inputDirection.x;
 
-            playerCharacter.EndAim();
-        }
+        playerCharacter.InputDirection = _movementDirection;
+    }
+
+    private void CanceledMoveInput(InputAction.CallbackContext context)
+    {
+        _inputDirection = Vector3.zero;
+        playerCharacter.InputDirection = Vector3.zero;
+    }
+
+    private void StartedAimInput(InputAction.CallbackContext context)
+    {
+        cinemachineCamera.Priority = 0;
+        aimingCamera.Priority = 100;
+
+        playerCharacter.StartAim();
+    }
+
+    private void CanceledAimInput(InputAction.CallbackContext context)
+    {
+        cinemachineCamera.Priority = 100;
+        aimingCamera.Priority = 0;
+
+        playerCharacter.EndAim();
+    }
+
+    private void AttackInput(InputAction.CallbackContext context)
+    {
+        playerCharacter.Shoot();
     }
 }
