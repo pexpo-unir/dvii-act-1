@@ -1,7 +1,6 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace UI
@@ -38,6 +37,11 @@ namespace UI
             restartButton.onClick.AddListener(RestartLevel);
         }
 
+        private void OnDisable()
+        {
+            restartButton.onClick.RemoveAllListeners();
+        }
+
         public void UpdateHealth(float value)
         {
             healthBar.SetPercentValue(value);
@@ -68,7 +72,7 @@ namespace UI
 
         private static void RestartLevel()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            GameManager.RestartLevel();
         }
     }
 }

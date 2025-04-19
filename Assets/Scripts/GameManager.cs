@@ -2,6 +2,7 @@ using DG.Tweening;
 using UI;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -42,10 +43,14 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
+    {
+        InitializeGame();
+    }
+
+    private void InitializeGame()
     {
         startGameButton.onClick.AddListener(StartLevel);
         backdropStart.color = backdropStartColor;
@@ -75,5 +80,10 @@ public class GameManager : MonoBehaviour
     public void UpdateChromaticAberration(float intensity)
     {
         ppManager.UpdateChromaticAberration(intensity);
+    }
+
+    public static void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
